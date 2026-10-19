@@ -4,6 +4,15 @@
 # shellcheck disable=SC2034
 SKIPUNZIP=0
 
+ui_print ""
+ui_print "██╗   ██╗████████╗██╗██╗     ██████╗  ██████╗ ██╗  ██╗"
+ui_print "██║   ██║╚══██╔══╝██║██║     ██╔══██╗██╔═══██╗╚██╗██╔╝"
+ui_print "██║   ██║   ██║   ██║██║     ██████╔╝██║   ██║ ╚███╔╝ "
+ui_print "██║   ██║   ██║   ██║██║     ██╔══██╗██║   ██║ ██╔██╗ "
+ui_print "╚██████╔╝   ██║   ██║███████╗██████╔╝╚██████╔╝██╔╝ ██╗"
+ui_print " ╚═════╝    ╚═╝   ╚═╝╚══════╝╚═════╝  ╚═════╝ ╚═╝  ╚═╝"
+ui_print ""
+
 if [ "$KSU" = "true" ]; then
   ui_print "- Root: KernelSU ($KSU_VER_CODE)"
 elif [ "$APATCH" = "true" ]; then
