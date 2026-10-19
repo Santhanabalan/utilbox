@@ -1,2 +1,3 @@
 # <id>|<label>, in display order. Each non-default id needs modes/<id>.conf.
 default|Default (no change)
+low|High Efficiency
