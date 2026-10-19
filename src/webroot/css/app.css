@@ -179,3 +179,213 @@ md-icon:not(:defined) {
   max-width: 200px;
   opacity: 1;
 }
+
+/* Hero cards */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px;
+  border-radius: var(--md-sys-shape-corner-medium, 12px);
+  background: color-mix(in srgb, var(--md-sys-color-primary-container) 55%, var(--md-sys-color-surface));
+  min-width: 0;
+}
+
+.hero-card__label {
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.03125em;
+  text-transform: uppercase;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.hero-card__value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--md-sys-color-primary);
+}
+
+.hero-card__note {
+  font-size: 0.75rem;
+  color: var(--md-sys-color-error);
+}
+
+.hero-card__note:empty {
+  display: none;
+}
+
+/* Grouped lists (M3 Expressive corners) */
+.list-title {
+  width: 100%;
+  max-width: 800px;
+  margin: 18px auto 0;
+  padding: 0 20px;
+  box-sizing: border-box;
+  font-size: 1em;
+  font-weight: bold;
+}
+
+.list-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list-container[aria-busy='true'] .list-item {
+  pointer-events: none;
+}
+
+.list-item {
+  position: relative;
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  box-sizing: border-box;
+  border-radius: 4px;
+  background: var(--md-sys-color-surface-container-high);
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  outline: none;
+  transition: transform 0.2s ease;
+}
+
+.list-item:only-child {
+  border-radius: 24px;
+}
+
+.list-item:first-child:not(:only-child) {
+  border-radius: 24px 24px 4px 4px;
+}
+
+.list-item:last-child:not(:only-child) {
+  border-radius: 4px 4px 24px 24px;
+}
+
+.list-item:active {
+  transform: scale(0.98);
+}
+
+.list-item:focus-visible {
+  outline: 2px solid var(--md-sys-color-secondary);
+  outline-offset: 2px;
+}
+
+.list-item md-radio {
+  pointer-events: none;
+}
+
+.li-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+
+.li-icon md-icon {
+  font-size: 20px;
+}
+
+.list-container--secondary .li-icon {
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.list-container--tertiary .li-icon {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.list-item-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toggle-text {
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.3;
+}
+
+.supporting-text {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: var(--md-sys-color-on-surface-variant);
+}
+
+.action-spinner {
+  --md-circular-progress-size: 24px;
+}
+
+.action-spinner[hidden] {
+  display: none;
+}
+
+/* Toast */
+.md-toast {
+  position: fixed;
+  bottom: 96px;
+  left: 50%;
+  transform: translateX(-50%) translateY(160px);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 288px;
+  max-width: calc(100vw - 24px);
+  min-height: 52px;
+  padding: 0 16px;
+  box-sizing: border-box;
+  border-radius: 14px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  background: var(--md-sys-color-inverse-surface);
+  color: var(--md-sys-color-inverse-on-surface);
+  z-index: 10000;
+  transition: transform 0.35s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.md-toast--open {
+  transform: translateX(-50%) translateY(0);
+}
+
+.md-toast--success {
+  background: var(--md-sys-color-tertiary-container);
+  color: var(--md-sys-color-on-tertiary-container);
+}
+
+.md-toast--error {
+  background: var(--md-sys-color-error-container);
+  color: var(--md-sys-color-on-error-container);
+}
+
+.md-toast__icon {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.md-toast__message {
+  flex: 1;
+  padding: 14px 0;
+}
