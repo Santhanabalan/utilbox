@@ -3,6 +3,7 @@ import "@material/web/progress/circular-progress.js";
 import "@material/web/radio/radio.js";
 import "@material/web/ripple/ripple.js";
 import { MODDIR, exec } from "./bridge.js";
+import { el } from "./dom.js";
 import { showToast } from "./toast.js";
 
 type Tone = "primary" | "secondary" | "tertiary";
@@ -43,17 +44,6 @@ const LIVE_NOTES: Record<string, string> = {
   drift: "Changed by something else, tap to re-apply",
   unsupported: "Not supported on this device",
 };
-
-function el<K extends keyof HTMLElementTagNameMap>(
-  tag: K,
-  className?: string,
-  text?: string,
-): HTMLElementTagNameMap[K] {
-  const node = document.createElement(tag);
-  if (className) node.className = className;
-  if (text !== undefined) node.textContent = text;
-  return node;
-}
 
 function parseModes(stdout: string): Mode[] {
   return stdout

@@ -1,6 +1,7 @@
-import "./material.js";
 import { renderFeatures } from "./features.js";
+import "./material.js";
 import { initNavigation } from "./navigation.js";
+import { renderSummary } from "./summary.js";
 import { initTheme } from "./theme.js";
 
 async function main(): Promise<void> {
@@ -8,7 +9,10 @@ async function main(): Promise<void> {
   initTheme();
   initNavigation();
   const summary = document.getElementById("summary-page");
-  if (summary) renderFeatures(summary);
+  if (summary) {
+    renderFeatures(summary);
+    renderSummary(summary).catch(() => {});
+  }
 }
 
 void main();
