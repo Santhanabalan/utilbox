@@ -8,7 +8,8 @@
     "build:webui": "vite build",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "sh tests/run.sh"
   },
   "dependencies": {
     "@material/material-color-utilities": "^0.4.0",
