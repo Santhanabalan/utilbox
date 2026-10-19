@@ -20,18 +20,28 @@
 
       <main>
         <div id="pages">
-          <section id="home-page"></section>
+          <section id="summary-page"></section>
+          <section id="optimization-page" hidden></section>
+          <section id="battery-page" hidden></section>
         </div>
       </main>
 
       <nav class="nav-bar" aria-label="Main navigation">
         <button
           class="nav-tab nav-tab--active"
-          data-page="home-page"
+          data-page="summary-page"
           aria-current="page"
         >
-          <md-icon class="nav-icon nav-icon--filled" aria-hidden="true">home</md-icon>
-          <span class="nav-label">Home</span>
+          <md-icon class="nav-icon" aria-hidden="true">dashboard</md-icon>
+          <span class="nav-label">Summary</span>
+        </button>
+        <button class="nav-tab" data-page="optimization-page">
+          <md-icon class="nav-icon" aria-hidden="true">speed</md-icon>
+          <span class="nav-label">Optimization</span>
+        </button>
+        <button class="nav-tab" data-page="battery-page">
+          <md-icon class="nav-icon" aria-hidden="true">battery_charging_full</md-icon>
+          <span class="nav-label">Battery</span>
         </button>
       </nav>
     </div>

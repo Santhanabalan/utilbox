@@ -1,12 +1,14 @@
 import './material.js';
 import { renderHome } from './features.js';
+import { initNavigation } from './navigation.js';
 import { initTheme } from './theme.js';
 
 async function main(): Promise<void> {
   if (import.meta.env.DEV) await import('./dev-mock.js');
   initTheme();
-  const home = document.getElementById('home-page');
-  if (home) renderHome(home);
+  initNavigation();
+  const summary = document.getElementById('summary-page');
+  if (summary) renderHome(summary);
 }
 
 void main();
