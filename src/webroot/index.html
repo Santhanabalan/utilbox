@@ -30,7 +30,7 @@
         align-items: center;
         padding: 10px 0;
       }
-      #error {
+      .error {
         color: #d33;
       }
     </style>
@@ -38,20 +38,19 @@
   <body>
     <main>
       <h1>UtilBox</h1>
-      <section>
-        <h2>Optimization</h2>
-        <p id="status">Loading…</p>
-        <fieldset id="modes" disabled></fieldset>
-        <p id="error" role="alert"></p>
-      </section>
     </main>
     <script>
-      const SCRIPT =
-        "/data/adb/modules/utilbox/features/perf_mode/perf_mode.sh";
-      const modesEl = document.getElementById("modes");
-      const statusEl = document.getElementById("status");
-      const errorEl = document.getElementById("error");
-      const labels = new Map();
+      const FEATURES_DIR = "/data/adb/modules/utilbox/features";
+      const FEATURES = [
+        {
+          title: "Optimization",
+          script: `${FEATURES_DIR}/perf_mode/perf_mode.sh`,
+        },
+        {
+          title: "Charging",
+          script: `${FEATURES_DIR}/charge_mode/charge_mode.sh`,
+        },
+      ];
       let seq = 0;
 
       // Same contract as the kernelsu npm package's exec().
@@ -72,56 +71,74 @@
         });
       }
 
-      function renderModes(listOutput, current) {
-        labels.clear();
-        modesEl.replaceChildren();
-        for (const line of listOutput.trim().split("\n")) {
-          const [id, text] = line.split("|");
-          if (!/^[a-z]+$/.test(id) || !text) continue;
-          labels.set(id, text);
-          const input = document.createElement("input");
-          input.type = "radio";
-          input.name = "mode";
-          input.value = id;
-          input.checked = id === current;
-          const label = document.createElement("label");
-          label.append(input, text);
-          modesEl.append(label);
-        }
-      }
-
-      async function load() {
-        const [list, status] = await Promise.all([
-          exec(`sh ${SCRIPT} list`),
-          exec(`sh ${SCRIPT} status`),
-        ]);
-        const [current, live] = status.stdout.trim().split(" ");
-        renderModes(list.stdout, current);
-        let text = `Current: ${labels.get(current) ?? current}`;
-        if (live === "drift")
-          text += " (live values were changed by something else)";
-        statusEl.textContent = text;
-        modesEl.disabled = false;
-      }
-
-      modesEl.addEventListener("change", async (event) => {
-        const id = event.target.value;
-        if (!labels.has(id)) return;
+      function createSection({ title, script }) {
+        const section = document.createElement("section");
+        const heading = document.createElement("h2");
+        const statusEl = document.createElement("p");
+        const modesEl = document.createElement("fieldset");
+        const errorEl = document.createElement("p");
+        heading.textContent = title;
+        statusEl.textContent = "Loading…";
         modesEl.disabled = true;
-        errorEl.textContent = "";
-        try {
-          const result = await exec(`sh ${SCRIPT} apply ${id}`);
-          if (result.errno !== 0) errorEl.textContent = result.stderr.trim();
-          await load();
-        } catch (err) {
-          errorEl.textContent = err.message;
-        }
-      });
+        errorEl.className = "error";
+        errorEl.setAttribute("role", "alert");
+        section.append(heading, statusEl, modesEl, errorEl);
+        document.querySelector("main").append(section);
+        const labels = new Map();
 
-      load().catch((err) => {
-        statusEl.textContent = "";
-        errorEl.textContent = err.message;
-      });
+        function renderModes(listOutput, current) {
+          labels.clear();
+          modesEl.replaceChildren();
+          for (const line of listOutput.trim().split("\n")) {
+            const [id, text] = line.split("|");
+            if (!/^[a-z]+$/.test(id) || !text) continue;
+            labels.set(id, text);
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = script;
+            input.value = id;
+            input.checked = id === current;
+            const label = document.createElement("label");
+            label.append(input, text);
+            modesEl.append(label);
+          }
+        }
+
+        async function load() {
+          const [list, status] = await Promise.all([
+            exec(`sh ${script} list`),
+            exec(`sh ${script} status`),
+          ]);
+          const [current, live] = status.stdout.trim().split(" ");
+          renderModes(list.stdout, current);
+          let text = `Current: ${labels.get(current) ?? current}`;
+          if (live === "drift") text += " (changed by something else)";
+          if (live === "unsupported") text += " (not supported on this device)";
+          statusEl.textContent = text;
+          modesEl.disabled = false;
+        }
+
+        modesEl.addEventListener("change", async (event) => {
+          const id = event.target.value;
+          if (!labels.has(id)) return;
+          modesEl.disabled = true;
+          errorEl.textContent = "";
+          try {
+            const result = await exec(`sh ${script} apply ${id}`);
+            if (result.errno !== 0) errorEl.textContent = result.stderr.trim();
+            await load();
+          } catch (err) {
+            errorEl.textContent = err.message;
+          }
+        });
+
+        load().catch((err) => {
+          statusEl.textContent = "";
+          errorEl.textContent = err.message;
+        });
+      }
+
+      FEATURES.forEach(createSection);
     </script>
   </body>
 </html>
