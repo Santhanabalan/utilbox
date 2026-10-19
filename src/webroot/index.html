@@ -1,144 +1,41 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     />
+    <meta name="color-scheme" content="dark light" />
     <title>UtilBox</title>
-    <style>
-      :root {
-        color-scheme: light dark;
-        font-family: system-ui, sans-serif;
-      }
-      body {
-        margin: 0;
-        padding: max(16px, env(safe-area-inset-top)) 16px 16px;
-      }
-      fieldset {
-        border: 1px solid #8884;
-        border-radius: 12px;
-        padding: 8px 12px;
-      }
-      fieldset:disabled {
-        opacity: 0.6;
-      }
-      label {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-        padding: 10px 0;
-      }
-      .error {
-        color: #d33;
-      }
-    </style>
+    <link rel="stylesheet" href="css/app.css" />
   </head>
   <body>
-    <main>
-      <h1>UtilBox</h1>
-    </main>
-    <script>
-      const FEATURES_DIR = "/data/adb/modules/utilbox/features";
-      const FEATURES = [
-        {
-          title: "Optimization",
-          script: `${FEATURES_DIR}/perf_mode/perf_mode.sh`,
-        },
-        {
-          title: "Charging",
-          script: `${FEATURES_DIR}/charge_mode/charge_mode.sh`,
-        },
-      ];
-      let seq = 0;
+    <div class="app-layout">
+      <header class="app-top-bar">
+        <div class="app-top-bar-inner">
+          <h1 class="app-title">UtilBox</h1>
+        </div>
+      </header>
 
-      // Same contract as the kernelsu npm package's exec().
-      function exec(cmd) {
-        return new Promise((resolve, reject) => {
-          if (typeof ksu === "undefined") {
-            reject(
-              new Error("Open this page from the KernelSU or APatch manager."),
-            );
-            return;
-          }
-          const cb = `utilbox_exec_${Date.now()}_${seq++}`;
-          window[cb] = (errno, stdout, stderr) => {
-            delete window[cb];
-            resolve({ errno, stdout, stderr });
-          };
-          ksu.exec(cmd, "{}", cb);
-        });
-      }
+      <main>
+        <div id="pages">
+          <section id="home-page"></section>
+        </div>
+      </main>
 
-      function createSection({ title, script }) {
-        const section = document.createElement("section");
-        const heading = document.createElement("h2");
-        const statusEl = document.createElement("p");
-        const modesEl = document.createElement("fieldset");
-        const errorEl = document.createElement("p");
-        heading.textContent = title;
-        statusEl.textContent = "Loading…";
-        modesEl.disabled = true;
-        errorEl.className = "error";
-        errorEl.setAttribute("role", "alert");
-        section.append(heading, statusEl, modesEl, errorEl);
-        document.querySelector("main").append(section);
-        const labels = new Map();
+      <nav class="nav-bar" aria-label="Main navigation">
+        <button
+          class="nav-tab nav-tab--active"
+          data-page="home-page"
+          aria-current="page"
+        >
+          <md-icon class="nav-icon nav-icon--filled" aria-hidden="true">home</md-icon>
+          <span class="nav-label">Home</span>
+        </button>
+      </nav>
+    </div>
 
-        function renderModes(listOutput, current) {
-          labels.clear();
-          modesEl.replaceChildren();
-          for (const line of listOutput.trim().split("\n")) {
-            const [id, text] = line.split("|");
-            if (!/^[a-z]+$/.test(id) || !text) continue;
-            labels.set(id, text);
-            const input = document.createElement("input");
-            input.type = "radio";
-            input.name = script;
-            input.value = id;
-            input.checked = id === current;
-            const label = document.createElement("label");
-            label.append(input, text);
-            modesEl.append(label);
-          }
-        }
-
-        async function load() {
-          const [list, status] = await Promise.all([
-            exec(`sh ${script} list`),
-            exec(`sh ${script} status`),
-          ]);
-          const [current, live] = status.stdout.trim().split(" ");
-          renderModes(list.stdout, current);
-          let text = `Current: ${labels.get(current) ?? current}`;
-          if (live === "drift") text += " (changed by something else)";
-          if (live === "unsupported") text += " (not supported on this device)";
-          statusEl.textContent = text;
-          modesEl.disabled = false;
-        }
-
-        modesEl.addEventListener("change", async (event) => {
-          const id = event.target.value;
-          if (!labels.has(id)) return;
-          modesEl.disabled = true;
-          errorEl.textContent = "";
-          try {
-            const result = await exec(`sh ${script} apply ${id}`);
-            if (result.errno !== 0) errorEl.textContent = result.stderr.trim();
-            await load();
-          } catch (err) {
-            errorEl.textContent = err.message;
-          }
-        });
-
-        load().catch((err) => {
-          statusEl.textContent = "";
-          errorEl.textContent = err.message;
-        });
-      }
-
-      FEATURES.forEach(createSection);
-    </script>
+    <script type="module" src="js/app.ts"></script>
   </body>
 </html>

@@ -1,0 +1,21 @@
+{
+  "name": "utilbox",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "sh build.sh",
+    "build:webui": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.4.0",
+    "@material/web": "2.4.1",
+    "kernelsu": "^3.0.2",
+    "material-icons": "^1.13.14"
+  },
+  "devDependencies": {
+    "typescript": "^6.0.3",
+    "vite": "^8.0.4"
+  }
+}

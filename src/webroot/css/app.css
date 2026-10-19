@@ -1,0 +1,181 @@
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--md-ref-typeface-plain);
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+md-icon:not(:defined) {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Baseline M3 palette until the dynamic theme is applied. */
+:root {
+  color-scheme: light dark;
+  --md-ref-typeface-brand: system-ui;
+  --md-ref-typeface-plain: system-ui;
+  --md-icon-font: 'Material Icons Outlined';
+  --md-sys-color-primary: #6750a4;
+  --md-sys-color-on-primary: #ffffff;
+  --md-sys-color-primary-container: #eaddff;
+  --md-sys-color-on-primary-container: #21005d;
+  --md-sys-color-secondary-container: #e8def8;
+  --md-sys-color-on-secondary-container: #1d192b;
+  --md-sys-color-surface: #fef7ff;
+  --md-sys-color-surface-container: #f3edf7;
+  --md-sys-color-surface-container-high: #ece6f0;
+  --md-sys-color-on-surface: #1d1b20;
+  --md-sys-color-on-surface-variant: #49454f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --md-sys-color-primary: #d0bcff;
+    --md-sys-color-on-primary: #381e72;
+    --md-sys-color-primary-container: #4f378b;
+    --md-sys-color-on-primary-container: #eaddff;
+    --md-sys-color-secondary-container: #4a4458;
+    --md-sys-color-on-secondary-container: #e8def8;
+    --md-sys-color-surface: #141218;
+    --md-sys-color-surface-container: #211f26;
+    --md-sys-color-surface-container-high: #2b2930;
+    --md-sys-color-on-surface: #e6e0e9;
+    --md-sys-color-on-surface-variant: #cac4d0;
+  }
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--md-sys-color-surface);
+  color: var(--md-sys-color-on-surface);
+}
+
+.app-layout main {
+  flex: 1;
+  overflow-x: clip;
+}
+
+.app-top-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: max(8px, env(safe-area-inset-top)) 16px 8px;
+  min-height: 64px;
+  box-sizing: border-box;
+  background: var(--md-sys-color-surface);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-top-bar-inner {
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.app-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 400;
+}
+
+#pages {
+  width: 100%;
+  padding-bottom: 88px;
+  box-sizing: border-box;
+}
+
+#pages > section {
+  box-sizing: border-box;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#pages > section[hidden] {
+  display: none;
+}
+
+/* Floating navigation bar */
+.nav-bar {
+  position: fixed;
+  bottom: max(16px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 6px;
+  background: var(--md-sys-color-surface-container-high);
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 12px 18px;
+  border: none;
+  background: transparent;
+  border-radius: 9999px;
+  cursor: pointer;
+  color: var(--md-sys-color-on-surface-variant);
+  font-family: inherit;
+  white-space: nowrap;
+}
+
+.nav-tab--active {
+  gap: 10px;
+  padding: 12px 24px 12px 18px;
+  background: var(--md-sys-color-secondary-container);
+  color: var(--md-sys-color-on-secondary-container);
+}
+
+.nav-icon {
+  font-size: 24px;
+}
+
+.nav-icon--filled {
+  font-family: 'Material Icons';
+}
+
+.nav-label {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.nav-tab--active .nav-label {
+  max-width: 200px;
+  opacity: 1;
+}
