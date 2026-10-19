@@ -1,5 +1,5 @@
 import './material.js';
-import { renderHome } from './features.js';
+import { renderFeatures } from './features.js';
 import { initNavigation } from './navigation.js';
 import { initTheme } from './theme.js';
 
@@ -8,7 +8,7 @@ async function main(): Promise<void> {
   initTheme();
   initNavigation();
   const summary = document.getElementById('summary-page');
-  if (summary) renderHome(summary);
+  if (summary) renderFeatures(summary);
 }
 
 void main();

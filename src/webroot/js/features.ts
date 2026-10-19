@@ -11,6 +11,7 @@ interface Feature {
   title: string;
   icon: string;
   tone: Tone;
+  page: string;
   script: string;
 }
 
@@ -20,8 +21,20 @@ interface Mode {
 }
 
 const FEATURES: Feature[] = [
-  { title: 'Optimization', icon: 'speed', tone: 'primary', script: `${MODDIR}/features/perf_mode/perf_mode.sh` },
-  { title: 'Charging', icon: 'bolt', tone: 'tertiary', script: `${MODDIR}/features/charge_mode/charge_mode.sh` },
+  {
+    title: 'Performance mode',
+    icon: 'speed',
+    tone: 'primary',
+    page: 'optimization-page',
+    script: `${MODDIR}/features/perf_mode/perf_mode.sh`,
+  },
+  {
+    title: 'Charge mode',
+    icon: 'bolt',
+    tone: 'tertiary',
+    page: 'battery-page',
+    script: `${MODDIR}/features/charge_mode/charge_mode.sh`,
+  },
 ];
 
 const MODE_ID = /^[a-z]+$/;
@@ -134,8 +147,12 @@ function renderFeature(feature: Feature, hero: HTMLElement, page: HTMLElement): 
   });
 }
 
-export function renderHome(page: HTMLElement): void {
+// Status cards go on the summary page; each mode list goes on its feature's page.
+export function renderFeatures(summary: HTMLElement): void {
   const hero = el('div', 'hero-grid');
-  page.append(hero);
-  for (const feature of FEATURES) renderFeature(feature, hero, page);
+  summary.append(hero);
+  for (const feature of FEATURES) {
+    const page = document.getElementById(feature.page);
+    if (page) renderFeature(feature, hero, page);
+  }
 }
