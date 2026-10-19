@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint shell scripts
+        run: |
+          shellcheck --version
+          shellcheck -S warning build.sh tests/*.sh src/*.sh src/lib/*.sh \
+            src/common/*.sh src/features/*/*.sh \
+            src/META-INF/com/google/android/update-binary
+
+  shell-tests:
+    name: Shell tests (${{ matrix.shell }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Root managers run module scripts in BusyBox ash; dash catches other bashisms.
+        shell: [dash, busybox sh]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install BusyBox
+        if: matrix.shell == 'busybox sh'
+        run: sudo apt-get update && sudo apt-get install -y busybox
+      - name: Run tests
+        env:
+          TEST_SH: ${{ matrix.shell }}
+        run: sh tests/run.sh
+
+  webui:
+    name: WebUI typecheck and format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run format:check
+
+  build:
+    name: Build module zip
+    needs: [shellcheck, shell-tests, webui]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: sh build.sh
+      - name: Check zip contents
+        run: |
+          zip=$(ls utilbox-*.zip)
+          unzip -l "$zip"
+          for f in module.prop customize.sh service.sh uninstall.sh \
+            META-INF/com/google/android/update-binary \
+            lib/common.sh common/info.sh \
+            features/perf_mode/perf_mode.sh features/charge_mode/charge_mode.sh \
+            webroot/index.html; do
+            unzip -l "$zip" "$f" >/dev/null || { echo "::error::$f missing from $zip"; exit 1; }
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: utilbox-module
+          path: utilbox-*.zip
+          if-no-files-found: error
