@@ -5,6 +5,9 @@ MODDIR=${0%/*}
 until [ "$(getprop sys.boot_completed)" = "1" ]; do
   sleep 1
 done
+
+sh "$MODDIR/features/charge_mode/charge_mode.sh" boot
+
 # Let vendor perf/thermal services settle first.
 sleep 30
 
