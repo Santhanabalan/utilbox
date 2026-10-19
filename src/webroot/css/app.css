@@ -34,7 +34,7 @@ md-icon:not(:defined) {
   color-scheme: light dark;
   --md-ref-typeface-brand: system-ui;
   --md-ref-typeface-plain: system-ui;
-  --md-icon-font: 'Material Icons Outlined';
+  --md-icon-font: "Material Icons Outlined";
   --md-sys-color-primary: #6750a4;
   --md-sys-color-on-primary: #ffffff;
   --md-sys-color-primary-container: #eaddff;
@@ -150,7 +150,9 @@ md-icon:not(:defined) {
   color: var(--md-sys-color-on-surface-variant);
   font-family: inherit;
   white-space: nowrap;
-  transition: background 0.25s ease, padding 0.25s ease;
+  transition:
+    background 0.25s ease,
+    padding 0.25s ease;
 }
 
 .nav-tab--active {
@@ -165,7 +167,7 @@ md-icon:not(:defined) {
 }
 
 .nav-icon--filled {
-  font-family: 'Material Icons';
+  font-family: "Material Icons";
 }
 
 .nav-label {
@@ -198,7 +200,11 @@ md-icon:not(:defined) {
   gap: 4px;
   padding: 16px;
   border-radius: var(--md-sys-shape-corner-medium, 12px);
-  background: color-mix(in srgb, var(--md-sys-color-primary-container) 55%, var(--md-sys-color-surface));
+  background: color-mix(
+    in srgb,
+    var(--md-sys-color-primary-container) 55%,
+    var(--md-sys-color-surface)
+  );
   min-width: 0;
 }
 
@@ -246,7 +252,7 @@ md-icon:not(:defined) {
   gap: 2px;
 }
 
-.list-container[aria-busy='true'] .list-item {
+.list-container[aria-busy="true"] .list-item {
   pointer-events: none;
 }
 

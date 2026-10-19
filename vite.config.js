@@ -1,12 +1,12 @@
-import { defineConfig } from 'vite'
+import { defineConfig } from "vite";
 
 export default defineConfig({
-  root: 'src/webroot',
-  base: './',
+  root: "src/webroot",
+  base: "./",
   build: {
-    outDir: '../../Module/webroot',
+    outDir: "../../Module/webroot",
     emptyOutDir: true,
-    target: 'es2019',
-    cssTarget: ['chrome105'],
+    target: "es2019",
+    cssTarget: ["chrome105"],
   },
-})
+});
